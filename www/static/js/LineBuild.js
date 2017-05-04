@@ -7,21 +7,11 @@ var LineBuild = {
     option: null,
     getData: function(linear) {
         var self = this;
-        // $.get("/home/index/line",function (res) {
-        //     var data = res;
-        //     self.xData = data.xAxis[0];
-        //     self.setOption();
-        //     for(var i = 0;i < data.yAxis.length;i++){
-        //         var series = new Series(data.yAxis[i]);
-        //         self.option.series.push(series);
-        //     }
-        //     console.log(self.option);
-        //     linear.setOption(self.option);
-        // });
+
         function Series(data) {
             this.type = 'scatter';
             this.data = data;
-            this.symbolSize = 2;
+            this.symbolSize = 5;
             this.label = {
                 emphasis: {
                     show: true,

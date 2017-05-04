@@ -30,11 +30,17 @@ var ChannerModel = {
             xAxis: {
                 data: self.xData
             },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params) {
+                    return params[0].axisValue + ":" + params[0].value;
+                },
+            },
             yAxis: {},
             series: [{
                 type: 'line',
                 smooth: true,
-                data: self.yData
+                data: self.yData,
             }]
         };
 
