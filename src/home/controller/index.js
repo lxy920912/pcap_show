@@ -7,18 +7,21 @@ export default class extends Base {
      * index action
      * @return {Promise} []
      */
+    __before() {
+        console.log("...........before............");
+    }
     indexAction() {
         //auto render template file index_index.html
         return this.display();
     }
     async listAction(self) {
-        let model = this.model("data");
+        let model = this.model("libpcap_data");
         let data = await model.where({ id: 4 }).find();
         console.log(data);
         return self.success(data);
     }
     async channelloaderAction(self) {
-        let model = this.model("data");
+        let model = this.model("libpcap_data");
         let start = await model.min("time_s");
         let end = await model.max("time_s");
         let data = {}
@@ -31,9 +34,9 @@ export default class extends Base {
 
     }
     async clockAction(self) {
-        let model = this.model("data");
-        let start = await model.min("time_s");
-        let end = await model.max("time_s");
+        let model = this.model("libpcap_data");
+        let start = await model.min("receive_s");
+        let end = await model.max("receive_s");
         let obj = {};
         for (let i = start; i <= end; i++) {
             let list = await model.where({ "SSID": "TP-LINK_5DE0", "time_s": i }).count();
@@ -45,33 +48,58 @@ export default class extends Base {
         return this.display();
     }
     async lineAction(self) {
-        let count = 5;
-        let model = this.model("data");
+        let count = 100;
+        let model = this.model("libpcap_data");
         let datas = [];
-        // datas[0] = await model.limit(count).where({ "SSID": "TP-LINK_5DE0" }).select();
-        datas[1] = await model.limit(count).where({ "SSID": "gaogao" }).select();
-        datas[0] = await model.limit(count).where({ "SSID": "219" }).select();
-        datas[2] = await model.limit(count).where({ "SSID": "Netcore_09E8A7" }).select();
-        console.log(datas[2].length);
-
+        datas[0] = await model.limit(count).where({ "ssid": "360免费WiFi-24" }).select();
+        datas[1] = await model.limit(count).where({ "ssid": "TP-LINK_324" }).select();
+        datas[0].splice(0, 80);
+        datas[1].splice(0, 80);
         let obj = [];
+        let result = [];
         for (let j = 0; j < datas.length; j++) {
             obj[j] = [];
-            obj[j].push([0, 0]);
+            result[j] = [];
             for (let i = 1; i < datas[j].length && i < count; i++) {
-                let xi_s = datas[j][i].time_s - datas[j][0].time_s;
-                let xi_ms = datas[j][i].time_ms - datas[j][0].time_ms;
-                // console.log(xi_s + ":" + xi_ms);
-                let xi = (xi_s * 1000) + (xi_ms / 1000);
-                let oi = ((datas[j][i].macTimeStamp - datas[j][0].macTimeStamp) * 1000 - xi);
-                // let oi = (datas[j][i].framTimeStamp - datas[j][0].framTimeStamp) * 1000 - xi;
-                obj[j].push([xi, oi]);
+                let xi = datas[j][i].sequence - datas[j][0].sequence;
+                let ki = datas[j][i].frame_timestamp - datas[j][i - 1].frame_timestamp;
+                let vi = datas[j][i].sequence - datas[j][i - 1].sequence;
+                let oi = ki / vi;
+                obj[j].push([xi, oi, datas[j][i].ssid_signal]);
             }
+            let sum = 0;
+            for (let i = 1; i < obj[j].length; i++) {
+                let xi = obj[j][i][0];
+                let oi = Math.abs(obj[j][i][1] - obj[j][i - 1][1]) + sum;
+                sum = oi;
+                result[j].push([xi, oi, obj[j][i][2]]);
+            }
+
         }
         // console.log(obj);
-        this.json(obj);
+        this.json(result);
     }
     async linearAction() {
+        return this.display();
+    }
+    async borwnLineAction() {
+
+    }
+    async brownAction() {
+        let model = this.model("data");
+        let datas = [];
+        datas[1] = await model.limit(count).where({ "ssid": "alvin" }).select();
+        datas[0] = await model.limit(count).where({ "ssid": "TP-LINK_324" }).select();
+        let obj = [];
+        for (let j = 0; j < obj.length; j++) {
+            obj[j] = [];
+            for (let i = 1; i < datas[j].length; i++) {
+                let xi = datas[j][i].sequence_nubmer - datas[j][0].sequence_nubmer;
+                let ti = (datas[j][i].timestamp - datas[j][i].timestamp) / (xi);
+                obj[j].push([xi, ti, data[j][i].sequence_nubmer]);
+            }
+
+        }
         return this.display();
     }
 

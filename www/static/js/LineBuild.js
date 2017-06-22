@@ -15,15 +15,15 @@ var LineBuild = {
             this.label = {
                 emphasis: {
                     show: true,
-                    formatter: function(param) {
-                        return param[1];
+                    textStyle: {
+                        fontSize: 16
                     },
                     position: 'top'
                 }
             };
         }
         $.get("/home/index/line", function(res) {
-            // console.log(res);
+            console.log(res);
             self.setOption();
             for (var i = 0; i < res.length; i++) {
                 var series = (function(i) {
@@ -53,6 +53,12 @@ var LineBuild = {
                 },
                 // scale: true
             },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
             series: []
         };
     },
@@ -60,7 +66,6 @@ var LineBuild = {
         var self = this;
         var linear = echarts.init(document.getElementById("content"));
         self.getData(linear);
-
     }
 }
 LineBuild.init();

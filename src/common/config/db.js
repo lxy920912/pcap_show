@@ -4,19 +4,19 @@
  * @type {Object}
  */
 export default {
-  type: 'mysql',
-  adapter: {
-    mysql: {
-      host: '127.0.0.1',
-      port: '',
-      database: 'pcap',
-      user: 'root',
-      password: 'root',
-      prefix: 'pcap_',
-      encoding: 'utf8'
-    },
-    mongo: {
+    type: 'mysql',
+    adapter: {
+        mysql: {
+            host: '10.108.41.39',
+            port: '',
+            database: 'libpcap',
+            user: 'root',
+            password: 'root',
+            prefix: '',
+            encoding: 'utf8'
+        },
+        mongo: {
 
+        }
     }
-  }
 };
