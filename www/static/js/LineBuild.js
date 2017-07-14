@@ -25,13 +25,18 @@ var LineBuild = {
         $.get("/home/index/line", function(res) {
             console.log(res);
             self.setOption();
-            for (var i = 0; i < res.length; i++) {
-                var series = (function(i) {
-                    return new Series(res[i]);
-                })(i);
+            for (key in res) {
+                var series = (function(key) {
+                    return new Series(res[key].dots);
+                })(key);
                 self.option.series.push(series);
             }
-
+            // for (var i = 0; i < res.length; i++) {
+            //     var series = (function(i) {
+            //         return new Series(res[i]);
+            //     })(i);
+            //     self.option.series.push(series);
+            // }
             console.log(self.option)
             linear.setOption(self.option);
         });

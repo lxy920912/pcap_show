@@ -1,4 +1,4 @@
-var Sequence = {
+var Gaussian = {
     xData: null,
     yData: null,
     option: null,
@@ -6,22 +6,25 @@ var Sequence = {
         var self = this;
 
         function Series(data) {
-            this.type = 'scatter';
+            this.type = 'line';
             this.data = data;
             this.symbolSize = 5;
-            this.showSymbol = true;
-            this.label = {
-                emphasis: {
-                    show: true,
-                    textStyle: {
-                        fontSize: 16
-                    },
-                    position: 'top'
-                }
-            };
+            this.showSymbol = false;
+            this.smooth = true,
+                this.label = {
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: 16
+                        },
+                        position: 'top'
+                    }
+                };
         }
-        $.get("/home/index/sequence_increments", function(res) {
+        $.get("/home/index/gaussian", function(res) {
             console.log(res);
+
+
             self.setOption();
             for (var key in res) {
                 var series = (function(key) {
@@ -39,13 +42,15 @@ var Sequence = {
         var self = this;
         self.option = {
             title: {
-                text: "the increments of sequence"
+                text: "the Gaussian of signal"
             },
             xAxis: {
                 splitLine: {
                     show: false
                 },
-                min: 0,
+                min: -90,
+                max: 0,
+
             },
             yAxis: {
                 splitLine: {
@@ -67,5 +72,6 @@ var Sequence = {
         var linear = echarts.init(document.getElementById("content"));
         self.getData(linear);
     }
+
 }
-Sequence.init();
+Gaussian.init();

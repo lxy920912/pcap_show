@@ -7,7 +7,7 @@ export default {
     type: 'mysql',
     adapter: {
         mysql: {
-            host: '10.108.41.39',
+            host: '10.108.41.213',
             port: '',
             database: 'libpcap',
             user: 'root',
