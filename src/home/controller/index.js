@@ -1,6 +1,9 @@
 'use strict';
 
 import Base from './base.js';
+import schedule from 'node-schedule'
+import ecStat from './ecStat.js'
+
 // import Math from 'Math'
 export default class extends Base {
     /**
@@ -8,18 +11,38 @@ export default class extends Base {
      * @return {Promise} []
      */
     datas = [];
-    ssids = ["kexin-228"];
+    ssids = ["alvin"];
+    lastIds = [0];
     //    ssids = ["TP-LINK_5DE0", "kexin-228"];
-    count = 300;
-    async __before() {
+    count = 400;
+    constructor(ctx) {
+        super(ctx);
+        console.log("constructor")
+        console.log(ecStat)
+    }
+    async __before(self) {
         console.log("...........before............");
-
         let model = this.model("libpcap_data");
         let count = this.count;
         let ssids = this.ssids;
-        for (let i = 0; i < ssids.length; i++) {
-            this.datas[i] = await model.limit(count).where({ "ssid": ssids[i] }).select();
+        let lastId = this.lastId;
+        await this.getData(self, model, count, ssids);
+        let rule = new schedule.RecurrenceRule();
+        let time = [];
+        for (let i = 0; i < 60; i = i + 3) {
+            time.push(i);
         }
+        rule.second = time
+        schedule.scheduleJob(rule, () => {})
+    }
+    async getData(self, model, count, ssids) {
+
+        for (let i = 0; i < ssids.length; i++) {
+            self.datas[i] = await model.limit(count).where({ "ssid": ssids[i], id: { '>': self.lastIds[0] } }).select();
+            let len = self.datas[i].length;
+            self.lastIds[0] = self.datas[i][len - 1].id;
+        }
+        console.log("lastID", this.lastIds);
     }
     indexAction() {
         return this.display();
@@ -58,10 +81,7 @@ export default class extends Base {
         return this.display();
     }
     async lineAction(self) {
-        let datas = this.spliceData(this.datas[0], 50);
-        // let datas = this.datas
-        // console.log("datas:", datas);
-
+        let datas = this.spliceData(this.datas[0], 100);
         let result = {};
         let count = this.count;
         let ssids = this.ssids;
@@ -74,10 +94,11 @@ export default class extends Base {
                 let vi = this.getReceiveTime(datas[j][i].receive_s, datas[j][i].receive_ms) - this.getReceiveTime(datas[j][0].receive_s, datas[j][0].receive_ms)
                 let oi = ki - (vi * 1000000);
                 obj.dots.push([xi, oi]);
-                console.log(vi);
+                // console.log(vi);
             }
             result[ssids[j] + "+" + j] = obj;
-
+            let myRegression = ecStat.regression('linear', obj.dots);
+            console.log(myRegression.expression);
             // let sum = 0;
             // for (let i = 1; i < obj[j].length; i++) {
             //     let xi = obj[j][i][0];
@@ -86,7 +107,8 @@ export default class extends Base {
             //     result[j].push([xi, oi, obj[j][i][2]]);
             // }
         }
-        console.log(".........");
+        // console.log(".........", result);
+
         return this.json(result);
     }
     async linearAction() {
@@ -108,7 +130,6 @@ export default class extends Base {
                 let ti = (datas[j][i].timestamp - datas[j][i].timestamp) / (xi);
                 obj[j].push([xi, ti, data[j][i].sequence_nubmer]);
             }
-
         }
         return this.display();
     }
@@ -198,6 +219,10 @@ export default class extends Base {
         let times = time_s + "." + ms_str;
         return parseFloat(times);
     }
+    testAction() {
+        this.display();
+    }
+
 }
 /*
 DROP TABLE IF EXISTS `pcap`.`pcap_data`;
