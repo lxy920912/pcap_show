@@ -14,7 +14,7 @@ export default class extends Base {
     ssids = ["alvin"];
     lastIds = [0];
     //    ssids = ["TP-LINK_5DE0", "kexin-228"];
-    count = 400;
+    count = 40000;
     constructor(ctx) {
         super(ctx);
         console.log("constructor")
@@ -139,12 +139,12 @@ export default class extends Base {
         let ssids = this.ssids;
         datas = this.spliceData(datas[0]);
         let gaussians = {};
+        let model = this.model("libpcap_data");
         for (let i = 0; i < datas.length; i++) {
             let gaussian = {};
             gaussian.average = 0;
             gaussian.sigma = 0;
             let number = Math.min(datas[i].length, count);
-            console.log(number);
             for (let j = 0; j < number; j++) {
                 gaussian.average += datas[i][j].ssid_signal;
             }
@@ -222,7 +222,9 @@ export default class extends Base {
     testAction() {
         this.display();
     }
+    async dataStoreAction() {
 
+    }
 }
 /*
 DROP TABLE IF EXISTS `pcap`.`pcap_data`;
