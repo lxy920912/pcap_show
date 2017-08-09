@@ -11,10 +11,10 @@ export default class extends Base {
      * @return {Promise} []
      */
     datas = [];
-    ssids = ["alvin"];
+    ssids = ["Houseton%"];
     lastIds = [0];
     //    ssids = ["TP-LINK_5DE0", "kexin-228"];
-    count = 40000;
+    count = 400;
     constructor(ctx) {
         super(ctx);
         console.log("constructor")
@@ -22,7 +22,7 @@ export default class extends Base {
     }
     async __before(self) {
         console.log("...........before............");
-        let model = this.model("libpcap_data");
+        let model = this.model("libpcap_data2");
         let count = this.count;
         let ssids = this.ssids;
         let lastId = this.lastId;
@@ -38,9 +38,10 @@ export default class extends Base {
     async getData(self, model, count, ssids) {
 
         for (let i = 0; i < ssids.length; i++) {
-            self.datas[i] = await model.limit(count).where({ "ssid": ssids[i], id: { '>': self.lastIds[0] } }).select();
+            self.datas[i] = await model.limit(count).where({ "ssid": ['like', ssids[i]], id: { '>': self.lastIds[0] } }).select();
             let len = self.datas[i].length;
             self.lastIds[0] = self.datas[i][len - 1].id;
+            console.log('len', len)
         }
         console.log("lastID", this.lastIds);
     }
@@ -88,27 +89,18 @@ export default class extends Base {
         for (let j = 0; j < datas.length; j++) {
             let obj = {};
             obj.dots = [];
-            for (let i = 1; i < datas[j].length; i++) {
+            for (let i = 0; i < datas[j].length; i++) {
                 let xi = datas[j][i].sequence - datas[j][0].sequence;
                 let ki = datas[j][i].frame_timestamp - datas[j][0].frame_timestamp;
                 let vi = this.getReceiveTime(datas[j][i].receive_s, datas[j][i].receive_ms) - this.getReceiveTime(datas[j][0].receive_s, datas[j][0].receive_ms)
                 let oi = ki - (vi * 1000000);
-                obj.dots.push([xi, oi]);
+                obj.dots.push([ki, oi]);
                 // console.log(vi);
             }
             result[ssids[j] + "+" + j] = obj;
             let myRegression = ecStat.regression('linear', obj.dots);
             console.log(myRegression.expression);
-            // let sum = 0;
-            // for (let i = 1; i < obj[j].length; i++) {
-            //     let xi = obj[j][i][0];
-            //     let oi = obj[j][i][1] - obj[j][i - 1][1] + sum;
-            //     sum = oi;
-            //     result[j].push([xi, oi, obj[j][i][2]]);
-            // }
         }
-        // console.log(".........", result);
-
         return this.json(result);
     }
     async linearAction() {
