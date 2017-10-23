@@ -56,11 +56,11 @@ export default class extends Base {
     }
     async channelloaderAction(self) {
         let model = this.model("libpcap_data");
-        let start = await model.min("time_s");
-        let end = await model.max("time_s");
+        let start = await model.min("receive_s");
+        let end = await model.max("receive_s");
         let data = {}
         for (let i = start; i <= end; i++) {
-            data[i + ""] = await model.where({ "time_s": i }).count("*");
+            data[i + ""] = await model.where({ "receive_s": i }).count("*");
         }
         data["start"] = start;
         data["end"] = end;
@@ -73,7 +73,7 @@ export default class extends Base {
         let end = await model.max("receive_s");
         let obj = {};
         for (let i = start; i <= end; i++) {
-            let list = await model.where({ "SSID": "TP-LINK_5DE0", "time_s": i }).count();
+            let list = await model.where({ "SSID": "TP-LINK_5DE0", "receive_s": i }).count();
             obj[i + ""] = list;
         }
         return self.success(obj);
@@ -202,13 +202,13 @@ export default class extends Base {
     sequenceAction() {
         return this.display();
     }
-    getReceiveTime(time_s, time_ms) {
+    getReceiveTime(receive_s, time_ms) {
         let ms_str = time_ms + "";
         let len = ms_str.length;
         for (let i = len; ms_str.length < 6; i++) {
             ms_str = '0' + ms_str;
         }
-        let times = time_s + "." + ms_str;
+        let times = receive_s + "." + ms_str;
         return parseFloat(times);
     }
     testAction() {
@@ -222,7 +222,7 @@ export default class extends Base {
 DROP TABLE IF EXISTS `pcap`.`pcap_data`;
 CREATE TABLE  `pcap`.`pcap_data` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `time_s` bigint(20) unsigned NOT NULL,
+  `receive_s` bigint(20) unsigned NOT NULL,
   `time_ms` bigint(20) unsigned NOT NULL,
   `pLength` int(10) unsigned NOT NULL,
   `radiotapHeadLength` int(10) unsigned DEFAULT NULL,

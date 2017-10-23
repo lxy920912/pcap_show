@@ -9,9 +9,10 @@
     "watch": "npm run watch-compile"
   },
   "dependencies": {
-    "thinkjs": "2.2.x",
+    "antd-mobile": "^2.0.0",
     "babel-runtime": "6.x.x",
-    "source-map-support": "0.4.0"
+    "source-map-support": "0.4.0",
+    "thinkjs": "2.2.x"
   },
   "devDependencies": {
     "Math": "0.0.1-security",
