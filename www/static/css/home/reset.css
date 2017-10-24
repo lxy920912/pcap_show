@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background-image: url("/static/img/bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #aabbcc;
+}
+
+.left {
+    width: 240px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.right {
+    position: absolute;
+    left: 240px;
+    right: 0px;
+    bottom: 0;
+    top: 0;
+}
+
+.box_gaussian {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 500px;
+    width: 800px;
+    margin: auto;
+}
+
+.right-top {
+    width: 100%;
+    height: 200px;
+    background-color: #aabbcc;
+}

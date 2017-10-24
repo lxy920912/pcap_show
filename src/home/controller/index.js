@@ -217,6 +217,9 @@ export default class extends Base {
     async dataStoreAction() {
 
     }
+    reactAction() {
+        this.display();
+    }
 }
 /*
 DROP TABLE IF EXISTS `pcap`.`pcap_data`;

@@ -15,7 +15,8 @@ var Gaussian = {
                     emphasis: {
                         show: true,
                         textStyle: {
-                            fontSize: 16
+                            fontSize: 16,
+                            color: '#aabbcc'
                         },
                         position: 'top'
                     }
@@ -42,7 +43,9 @@ var Gaussian = {
         var self = this;
         self.option = {
             title: {
-                text: "the Gaussian of signal"
+                text: "the Gaussian of signal",
+                color: '#8392A5',
+                fontSize: 26,
             },
             xAxis: {
                 splitLine: {
