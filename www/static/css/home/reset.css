@@ -10,7 +10,7 @@ body {
     background-image: url("/static/img/bg.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-    color: #aabbcc;
+    color: #DEE3E8;
 }
 
 .left {
@@ -40,8 +40,9 @@ body {
     margin: auto;
 }
 
-.right-top {
+.charts-top {
     width: 100%;
-    height: 200px;
-    background-color: #aabbcc;
+    height: 100px;
+    /* background-color: #aabbcc; */
+    color: #ffffff;
 }

@@ -2,6 +2,7 @@ var Gaussian = {
     xData: null,
     yData: null,
     option: null,
+    size: 40,
     getData: function(linear) {
         var self = this;
 
@@ -22,10 +23,8 @@ var Gaussian = {
                     }
                 };
         }
-        $.get("/home/index/gaussian", function(res) {
+        $.get("/home/index/gaussian?size=" + this.size, function(res) {
             console.log(res);
-
-
             self.setOption();
             for (var key in res) {
                 var series = (function(key) {
@@ -34,8 +33,6 @@ var Gaussian = {
                 })(key);
                 self.option.series.push(series);
             }
-
-            console.log(self.option)
             linear.setOption(self.option);
         });
     },
@@ -44,8 +41,10 @@ var Gaussian = {
         self.option = {
             title: {
                 text: "the Gaussian of signal",
-                color: '#8392A5',
-                fontSize: 26,
+                textStyle: {
+                    fontSize: 26,
+                    color: '#dcdddc'
+                },
             },
             xAxis: {
                 splitLine: {
@@ -70,11 +69,13 @@ var Gaussian = {
             series: []
         };
     },
-    init: function() {
+    init: function(size) {
         var self = this;
+        self.size = size;
         var linear = echarts.init(document.getElementById("content"));
         self.getData(linear);
     }
 
 }
-Gaussian.init();
+var size = 100;
+Gaussian.init(size);

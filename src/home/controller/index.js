@@ -15,13 +15,13 @@ export default class extends Base {
     lastIds = [0];
     //    ssids = ["TP-LINK_5DE0", "kexin-228"];
     count = 400;
+    size = 50;
     constructor(ctx) {
         super(ctx);
         console.log("constructor")
         console.log(ecStat)
     }
     async __before(self) {
-        console.log("...........before............");
         let model = this.model("libpcap_data2");
         let count = this.count;
         let ssids = this.ssids;
@@ -129,7 +129,9 @@ export default class extends Base {
         let datas = this.datas;
         let count = this.count;
         let ssids = this.ssids;
-        datas = this.spliceData(datas[0]);
+        let size = this.get('size') ? parseInt(this.get('size')) : this.size;
+        console.log('............', size, '.............');
+        datas = this.spliceData(datas[0], size);
         let gaussians = {};
         let model = this.model("libpcap_data");
         for (let i = 0; i < datas.length; i++) {
@@ -170,9 +172,9 @@ export default class extends Base {
     async showGaussianAction() {
         this.display();
     }
-    spliceData(datas, count = 20) {
+    spliceData(datas, size = 20) {
         var len = datas.length;
-        var groupLent = count;
+        var groupLent = size;
         var result = [];
         let j = 0;
         console.log(len);
