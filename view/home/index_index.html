@@ -5,12 +5,45 @@
     <meta charset="UTF-8">
     <title>New ThinkJS Application</title>
     <link href="/static/css/home/index.css" rel="stylesheet" type="text/css">
+    <style>
+        .box {
+            height: 400px;
+            width: 400px;
+            background-color: #aabbcc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .content {
+            background: aqua;
+        }
+        
+        .box1 {
+            width: 400px;
+            height: 400px;
+            background: #ffaabb;
+        }
+        
+        .box-shadow {
+            width: 100px;
+            height: 100px;
+            box-shadow: 10px 10px 5px #888888;
+            border: 5px solid #0f0;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="content">
+    <div class="box">
+        <div class="content">inedex</div>
+    </div>
+    <div class="box1">
 
     </div>
+    <div class="box-shadow">
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/3.5.2/echarts.min.js"></script>
     <script src="/static/js/ChannelLoader.js"></script>

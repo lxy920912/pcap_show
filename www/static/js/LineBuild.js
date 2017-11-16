@@ -16,7 +16,8 @@ var LineBuild = {
                 emphasis: {
                     show: true,
                     textStyle: {
-                        fontSize: 16
+                        fontSize: 16,
+                        color: '#ffffff',
                     },
                     position: 'top'
                 }
@@ -45,17 +46,34 @@ var LineBuild = {
         var self = this;
         self.option = {
             title: {
-                text: "Beacon Clock Skew"
+                text: "Beacon Clock Skew",
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 26,
+                }
             },
             xAxis: {
                 splitLine: {
-                    show: false
+                    show: false,
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff'
+                    }
                 }
             },
             yAxis: {
                 splitLine: {
-                    show: false
+                    show: false,
                 },
+                axisLabel: {
+                    textStyle: {
+                        color: '#fff'
+                    }
+                }
                 // scale: true
             },
             tooltip: {
@@ -69,7 +87,7 @@ var LineBuild = {
     },
     init: function() {
         var self = this;
-        var linear = echarts.init(document.getElementById("content"));
+        var linear = echarts.init(document.getElementById("linear-content"));
         self.getData(linear);
     }
 }

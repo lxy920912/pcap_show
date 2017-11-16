@@ -7,7 +7,7 @@ html,
 body {
     width: 100%;
     height: 100%;
-    background-image: url("/static/img/bg.jpg");
+    background-image: url("/static/img/bg2.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     color: #DEE3E8;
@@ -29,13 +29,13 @@ body {
     top: 0;
 }
 
-.box_gaussian {
+.box-gaussian {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    height: 500px;
+    height: 700px;
     width: 800px;
     margin: auto;
 }
@@ -43,6 +43,16 @@ body {
 .charts-top {
     width: 100%;
     height: 100px;
-    /* background-color: #aabbcc; */
     color: #ffffff;
+}
+
+.box-linear {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 700px;
+    width: 800px;
+    margin: auto;
 }

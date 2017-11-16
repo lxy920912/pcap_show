@@ -3,6 +3,8 @@
 import Base from './base.js';
 import schedule from 'node-schedule'
 import ecStat from './ecStat.js'
+import http from 'http'
+import axios from 'axios'
 
 // import Math from 'Math'
 export default class extends Base {
@@ -11,7 +13,8 @@ export default class extends Base {
      * @return {Promise} []
      */
     datas = [];
-    ssids = ["Houseton%"];
+    // ssids = ["Houseton%"];
+    ssids = ['TP-LINK_32%'];
     lastIds = [0];
     //    ssids = ["TP-LINK_5DE0", "kexin-228"];
     count = 400;
@@ -126,48 +129,59 @@ export default class extends Base {
         return this.display();
     }
     async gaussianAction() {
-        let datas = this.datas;
-        let count = this.count;
-        let ssids = this.ssids;
-        let size = this.get('size') ? parseInt(this.get('size')) : this.size;
-        console.log('............', size, '.............');
-        datas = this.spliceData(datas[0], size);
-        let gaussians = {};
-        let model = this.model("libpcap_data");
-        for (let i = 0; i < datas.length; i++) {
-            let gaussian = {};
-            gaussian.average = 0;
-            gaussian.sigma = 0;
-            let number = Math.min(datas[i].length, count);
-            for (let j = 0; j < number; j++) {
-                gaussian.average += datas[i][j].ssid_signal;
+        // let size = this.get('size') ? parseInt(this.get('size')) : this.size;
+        // let silde = this.get('slide') ? parseInt(this.get('slide')) : 10;
+        console.info(this.get())
+        let { size = this.size, slide = this.slide, time_start = 0, time_size = -1 } = this.get();
+        axios.get('http://localhost:8080/gaussian?size=' + size + '&slide=' + slide + '&time_start=' + time_start + '&time_size=' + time_size).then((res) => {
+                this.json(res.data);
+            }).catch((err) => {
+                console.error(err);
+            })
+            /*
+              let datas = this.datas;
+            let count = this.count;
+            let ssids = this.ssids;
+            let size = this.get('size') ? parseInt(this.get('size')) : this.size;
+            datas = this.spliceData(datas[0], size);
+            let gaussians = {};
+            let model = this.model("libpcap_data");
+            for (let i = 0; i < datas.length; i++) {
+                let gaussian = {};
+                gaussian.average = 0;
+                gaussian.sigma = 0;
+                let number = Math.min(datas[i].length, count);
+                for (let j = 0; j < number; j++) {
+                    gaussian.average += datas[i][j].ssid_signal;
+                }
+                gaussian.average = gaussian.average / number;
+                for (let j = 0; j < number; j++) {
+                    gaussian.sigma += Math.pow((datas[i][j].ssid_signal - gaussian.average), 2);
+                }
+                gaussian.sigma = gaussian.sigma / number;
+                gaussian.dots = getGaussian(gaussian.average, gaussian.sigma);
+                gaussians[ssids[i] + "+" + i] = gaussian;
             }
-            gaussian.average = gaussian.average / number;
-            for (let j = 0; j < number; j++) {
-                gaussian.sigma += Math.pow((datas[i][j].ssid_signal - gaussian.average), 2);
-            }
-            gaussian.sigma = gaussian.sigma / number;
-            gaussian.dots = getGaussian(gaussian.average, gaussian.sigma);
-            gaussians[ssids[i] + "+" + i] = gaussian;
-        }
 
-        function getGaussian(average, sigma) {
-            let T = 1 / (Math.pow(sigma * 2 * Math.PI, (1 / 2)));
-            let result = [];
-            let min = average - (Math.abs(sigma) * 5);
-            let max = average + (Math.abs(sigma) * 5);
-            for (let i = min; i < average; i++) {
-                let k = -Math.pow((i - average), 2) / (2 * sigma);
-                result.push([i, T * Math.pow(Math.E, k)]);
+            function getGaussian(average, sigma) {
+                let T = 1 / (Math.pow(sigma * 2 * Math.PI, (1 / 2)));
+                let result = [];
+                let min = average - (Math.abs(sigma) * 5);
+                let max = average + (Math.abs(sigma) * 5);
+                for (let i = min; i < average; i++) {
+                    let k = -Math.pow((i - average), 2) / (2 * sigma);
+                    result.push([i, T * Math.pow(Math.E, k)]);
+                }
+                result.push([average, T]);
+                for (let i = Math.ceil(average); i < max; i++) {
+                    let k = -Math.pow((i - average), 2) / (2 * sigma);
+                    result.push([i, T * Math.pow(Math.E, k)]);
+                }
+                return result;
             }
-            result.push([average, T]);
-            for (let i = Math.ceil(average); i < max; i++) {
-                let k = -Math.pow((i - average), 2) / (2 * sigma);
-                result.push([i, T * Math.pow(Math.E, k)]);
-            }
-            return result;
-        }
-        return this.json(gaussians);
+            return this.json(gaussians);
+            */
+
     }
     async showGaussianAction() {
         this.display();
@@ -214,7 +228,13 @@ export default class extends Base {
         return parseFloat(times);
     }
     testAction() {
-        this.display();
+        axios.get('http://localhost:8080/gaussian?size=50').then((res) => {
+                console.log(res.data);
+                this.success(res.data);
+            }).catch((err) => {
+                console.error(err);
+            })
+            // this.display();
     }
     async dataStoreAction() {
 
